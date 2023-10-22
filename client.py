@@ -22,6 +22,24 @@ supported_cipher_suites = [
 ]
 
 
+def encrypt_message(message, public_key):
+    # encrypt the message using the public key
+    return message
+
+def decrypt_message(message, private_key):
+    # decrypt the message using the private key
+    return message
+
+def generate_session_key():
+    session_key = ""
+    return session_key
+
+# generate a public/private key pair
+public_key = ""
+private_key = ""
+
+# generate a session key
+session_key = generate_session_key()
 
 # first we create a socket through which this client will reach/connect a target server
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
