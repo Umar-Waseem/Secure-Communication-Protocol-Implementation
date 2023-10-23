@@ -1,47 +1,48 @@
-## Server Implementation - Assignment 2 - Secure Communication Protocol
-
-
-## i200762
-## Muhammad Umar Waseem
-
-## i202473
-## Muhammad Huzaifa
-
 import socket
 
-# first we create a socket through which an incoming client will connect
+###### SOCKET CREATION ######
+
+# creating a socket for client server communication
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-# lets bind the socket to localhost address and port of 12345
+# bind the socket to a specific address and port so server can listen to it
 server_address = ('localhost', 12345)
 server_socket.bind(server_address)
 
-# listen for any incoming connections
-server_socket.listen(1)  # 1 is the maximum number of queued connections
+# listen for incoming connections
+server_socket.listen(1)
 
-print("Server is waiting for a connection...")
+print("(Server) Waiting for a connection...")
 
-# accept an incoming client connection and receive the client socket and address
+# accept a connection from the client
 client_socket, client_address = server_socket.accept()
-print("Connection established with", client_address)
+print("(Server) Connected to", client_address)
 
-#  receive data from the client and send a response back
-#  this is an infinite loop - it will run until the connection is closed
-while True:
-    
-    # receive buffer data of 1024 bytes from the client
-    data = client_socket.recv(1024).decode('utf-8')
-    
-    if not data:
-        break  # No more data, connection closed
+###### SENDING SERVER HELLO ###### (part 2 of 3 way handshake)
 
-    print("Received:", data)
+# Receive the "ClientHello" message from the client
+client_hello_message = client_socket.recv(1024)
+print("(Server) ClientHello message from the client: ", client_hello_message)
 
-    # Send a response back to the client
-    response = "Server received: " + data
-    client_socket.send(response.encode('utf-8'))
+# convert client_hello_message to string
+client_hello_message = client_hello_message.decode()
+print("(Server) decoded client_hello_message: ", client_hello_message)
 
+# Extract supported cipher suites from the "ClientHello" message (for further processing) and create a list
+supported_cipher_suites = client_hello_message.split(",")
+print("(Server) Supported cipher suites: ", supported_cipher_suites)
 
-# close up the connection and free resources
+# Choose the cipher suite to use
+CHOSEN_CIPHER_SUITE = supported_cipher_suites[0]
+print("(Server) Server Chose cipher suite: ", CHOSEN_CIPHER_SUITE)
+
+# Create the "ServerHello" message
+server_hello_message = CHOSEN_CIPHER_SUITE  # Chosen cipher suite
+
+# Send the "ServerHello" message to the client
+server_hello_message = server_hello_message.encode()
+client_socket.send(server_hello_message)
+
+# Close the connection
 client_socket.close()
 server_socket.close()
