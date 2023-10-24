@@ -1,6 +1,7 @@
 import socket
 import webbrowser
 import os
+import ssl
 
 ###################################
 ####### SOCKET CREATION ######
@@ -10,6 +11,12 @@ client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 server_address = ('localhost', 12345)
 client_socket.connect(server_address)
+
+ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+
+# Wrap the client_socket with SSL
+ssl_context = ssl.create_default_context(cafile="server.crt")
+client_socket = ssl_context.wrap_socket(client_socket, server_hostname='localhost')
 
 ###################################
 ###### 1. SENDING CLIENT HELLO ######
