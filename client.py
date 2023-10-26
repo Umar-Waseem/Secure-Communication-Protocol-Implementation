@@ -23,10 +23,8 @@ client_socket = ssl_context.wrap_socket(client_socket, server_hostname='localhos
 ###################################
 
 supported_cipher_suites = [
-    "TLS_RSA_WITH_AES_256_CBC_SHA256",
-    "TLS_DHE_WITH_AES_256_CBC_SHA256",
-    "TLS_RSA_WITH_AES_128_CBC_SHA256",
-    "TLS_DHE_WITH_AES_128_CBC_SHA256"
+    "TLS_RSA_WITH_AES_256_CBC_SHA256", # AES for symmetric encryption, RSA for key exchange, SHA256 for hashing
+    "TLS_DHE_WITH_AES_256_CBC_SHA256", # DHE(deffered diffie-hellman exchange) for key exchange, AES for symmetric encryption, SHA256 for hashing
 ]
 supported_cipher_suites = ",".join(supported_cipher_suites)
 
