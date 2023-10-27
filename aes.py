@@ -5,7 +5,7 @@ from cryptography.hazmat.backends import default_backend
 class AES:
 
     @staticmethod
-    def aes256_encrypt( key, message):
+    def aes256_encrypt(key, message):
         # Encrypt a message using AES-256
         cipher = Cipher(algorithms.AES(key), modes.ECB(), backend=default_backend())
         encryptor = cipher.encryptor()

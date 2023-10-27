@@ -3,6 +3,16 @@ import webbrowser
 import os
 import ssl
 
+
+def sendmsg(msg):
+    msg = msg.encode()
+    client_socket.send(msg)
+
+def recvmsg():
+    server_msg= client_socket.recv(1024).decode()
+    return server_msg
+
+
 ###################################
 ####### SOCKET CREATION ######
 ###################################
@@ -23,31 +33,20 @@ client_socket = ssl_context.wrap_socket(client_socket, server_hostname='localhos
 ###################################
 
 supported_cipher_suites = [
-    "TLS_RSA_WITH_AES_256_CBC_SHA256", # AES for symmetric encryption, RSA for key exchange, SHA256 for hashing
-    "TLS_DHE_WITH_AES_256_CBC_SHA256", # DHE(deffered diffie-hellman exchange) for key exchange, AES for symmetric encryption, SHA256 for hashing
+    "TLS_RSA_WITH_AES_256_CBC_SHA256",
+    "TLS_DHE_WITH_AES_256_CBC_SHA256",
 ]
 supported_cipher_suites = ",".join(supported_cipher_suites)
 
-client_hello_message = supported_cipher_suites
-print("(Client) ClientHello message to the server: ", client_hello_message)
-client_hello_message = client_hello_message.encode()
-client_socket.send(client_hello_message)
+client_msg = supported_cipher_suites
 
-server_hello_message = client_socket.recv(1024)
-server_hello_message = server_hello_message.decode()
-print("(Client) ServerHello message from the server: ", server_hello_message)
+print("(Client) message to the server: ", client_msg)
 
-# get request to server simple example which gives an html ui file
-client_socket.send("GET / HTTP/1.1\r\n".encode())
-data = client_socket.recv(1024)
-print(data.decode())
+sendmsg(client_msg)
 
-# Save the HTML content to a local file
-with open("received_file.html", "wb") as html_file:
-    html_file.write(data)
+server_msg = recvmsg()
+print("(Client) message from the server: ", server_msg)
 
-file_url = os.path.abspath("received_file.html")
-webbrowser.open("file://{}".format(file_url))
 
 client_socket.close()
 
